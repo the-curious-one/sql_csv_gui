@@ -43,22 +43,20 @@
 
     <h1>CSV Queries</h1><hr><br>
 
-    
-
-    <div>
+    <div class="form-container">
         <form action="" method="POST">
             <label for="query">Query:</label><br>
             <textarea name="query" id="query" placeholder="Type new query here..."><?= isset($_POST["query"]) ? $_POST["query"] : '' ?></textarea>
             <button type="submit">Filter</button>
             <button type="button" id="copyText">Copy Query</button>
             <button><a href="upload.php">Upload</a></button>
+            <button id="download-csv">Download Table as CSV</button>
         </form>
     </div><hr>
 
-    <div class="form-container">
+    <div>
 
         <section class="data">
-
             <?php
                 $default = "SELECT *
                                 FROM data";
@@ -88,6 +86,21 @@
         var table = new Tabulator("#table", {
             autoColumns: "full",
             data: tableData,
+            autoColumnsDefinitions: function(columns){
+
+                columns.unshift({
+                    title: "#",
+                    formatter: "rownum",
+                    width: 60,
+                    headerSort: false
+                });
+
+                return columns;
+            }
+        });
+
+        document.getElementById("download-csv").addEventListener("click", function(){
+            table.download("csv", "table-data.csv");
         });
 
         document.getElementById('copyText').addEventListener('click', async () => {
@@ -102,8 +115,10 @@
                 alert("Text could not be copied.");
             }
         });
+
+
+        
     </script>
 
-    
 </body>
 </html>
